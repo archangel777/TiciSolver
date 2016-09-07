@@ -1,3 +1,4 @@
+package main;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Random;
 
 public class Graph {
 	
+	private Map<Long, DistanceVector> fetched;
 	private Map<Long, Node> nodes;
 	private List<Edge> edges;
 	
@@ -91,6 +93,33 @@ public class Graph {
 			path.add(currentPoint);
 		}
 		return path;
+	}
+	
+	public void fetchToMemory(Long sourceId) {
+		long startTime = System.currentTimeMillis();
+		if (fetched.size() > 100) {
+			boolean b = true;
+			for (Map.Entry<Long, DistanceVector> iterator : fetched.entrySet()) {
+				if (b) fetched.remove(iterator.getKey());
+				b = !b;
+			}
+		}
+		fetched.put(sourceId, runDijkstra(sourceId));
+		System.out.println("Fetching one to memory took " + (System.currentTimeMillis() - startTime) + " ms!");
+	}
+	
+	public void fetchToMemory(List<Long> path) {
+		long startTime = System.currentTimeMillis();
+		fetched = new HashMap<>();
+		for (Long l : path) {
+			fetched.put(l, runDijkstra(l));
+		}
+		System.out.println("Fetching to memory took " + (System.currentTimeMillis() - startTime) + " ms!");
+	}
+	
+	public Double getCostInMemory(Long sourceId, Long targetId) {
+		if (!fetched.containsKey(sourceId)) fetchToMemory(sourceId);
+		return fetched.get(sourceId).getElement(targetId).getDistance();
 	}
 	
 }

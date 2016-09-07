@@ -1,3 +1,4 @@
+package main;
 
 public class DistanceElement implements Comparable<DistanceElement>{
 	private Long id;
