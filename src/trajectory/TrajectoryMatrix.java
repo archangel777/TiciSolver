@@ -29,7 +29,7 @@ public class TrajectoryMatrix extends ShortestPathDistance {
 				}
 			}
 			progress++;
-			System.out.println("Progress - " + new DecimalFormat("#.##").format(progress*100./total) + "%");
+			if (progress%10 == 0) System.out.println("Progress - " + new DecimalFormat("#.##").format(progress*100./total) + "%");
 		}
 		isGenerated = true;
 	}
