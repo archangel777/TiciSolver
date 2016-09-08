@@ -27,7 +27,7 @@ public class ShortestPathDistance  extends DistanceHelper<TrajectoryAsSet>{
 	
 	@Override
 	public double distance(TrajectoryAsSet t1, TrajectoryAsSet t2) {
-		
+		g.fetchToMemory(t1);
 		long endTime, startTime;
 		//array de tempo de cada trajetoria
 		ArrayList<Long> array_t1 = t1.getTsArray(), array_t2 = t2.getTsArray();
