@@ -9,11 +9,14 @@ import java.util.Random;
 
 public class Graph {
 	
+	private int pathFetched;
 	private Map<Long, DistanceVector> fetched;
 	private Map<Long, Node> nodes;
 	private List<Edge> edges;
 	
 	public Graph(){
+		pathFetched = -1;
+		fetched = new HashMap<>();
 		nodes = new HashMap<>();
 		edges = new ArrayList<>();
 	}
@@ -96,16 +99,10 @@ public class Graph {
 	}
 	
 	public void fetchToMemory(Long sourceId) {
-		long startTime = System.currentTimeMillis();
 		if (fetched.size() > 100) {
-			boolean b = true;
-			for (Map.Entry<Long, DistanceVector> iterator : fetched.entrySet()) {
-				if (b) fetched.remove(iterator.getKey());
-				b = !b;
-			}
+			fetched.clear();
 		}
 		fetched.put(sourceId, runDijkstra(sourceId));
-		System.out.println("Fetching one to memory took " + (System.currentTimeMillis() - startTime) + " ms!");
 	}
 	
 	public void fetchToMemory(List<Long> path) {
@@ -118,8 +115,22 @@ public class Graph {
 	}
 	
 	public Double getCostInMemory(Long sourceId, Long targetId) {
-		if (!fetched.containsKey(sourceId)) fetchToMemory(sourceId);
+		if (!fetched.containsKey(sourceId))  {
+			fetchToMemory(sourceId);
+			System.out.println("Not in memory");
+		}
+		
 		return fetched.get(sourceId).getElement(targetId).getDistance();
+	}
+
+	public void fetchToMemory(TrajectoryAsSet path) {
+		if (pathFetched != path.getTid()) {
+			fetched = new HashMap<>();
+			for (Edge e : path.getEdge_array()) {
+				fetched.put(e.getFromNode(), runDijkstra(e.getFromNode()));
+			}
+			pathFetched = path.getTid();
+		}
 	}
 	
 }

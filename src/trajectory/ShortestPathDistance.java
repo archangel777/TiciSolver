@@ -1,15 +1,18 @@
 package trajectory;
 
 import java.util.ArrayList;
+import java.util.Collection;
+
 import main.*;
 
 import com.vividsolutions.jts.geom.Coordinate;
+
+import main.TrajectoryAsSet;
 
 public class ShortestPathDistance  extends DistanceHelper<TrajectoryAsSet>{
 
 	//private AStar astar;
 	private Graph g;
-	private double greaterDistance = 1000;
 	
 	public ShortestPathDistance() {
 		
@@ -212,6 +215,12 @@ public class ShortestPathDistance  extends DistanceHelper<TrajectoryAsSet>{
 		if(v1==v2) return 0;
 		return g.getCostInMemory(v1, v2);
 
+	}
+	
+	@Override
+	public void generateMatrix(Collection<TrajectoryAsSet> list) {
+		// TODO Auto-generated method stub
+		
 	}
 		
 }
